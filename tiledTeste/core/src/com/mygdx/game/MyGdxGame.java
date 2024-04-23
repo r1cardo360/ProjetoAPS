@@ -29,7 +29,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private TiledMap map;
 	private OrthographicCamera cam;
 	private World mundo;
-	
+	//teste
 	
 	private BodyDef circleBodyDef;
 	private CircleShape circle;
