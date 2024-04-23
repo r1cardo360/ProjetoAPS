@@ -43,14 +43,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		mundo = new World(new Vector2(0, -10), true);
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, 20, 30);
-		map = new TmxMapLoader().load("teste.tmx");
+		map = new TmxMapLoader().load("Fase1.tmx");
 		debug = new Box2DDebugRenderer();
 		
 		circle = new CircleShape();
 		circleBodyDef = new BodyDef();
 		circleFixture = new FixtureDef();
 		
-		MapObjects objects = map.getLayers().get("Obj").getObjects();
+		MapObjects objects = map.getLayers().get("Estaticosq").getObjects();
 
 		for (MapObject object : objects) {
 		    if (object instanceof RectangleMapObject) {
