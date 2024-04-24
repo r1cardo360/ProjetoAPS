@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -42,7 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		mundo = new World(new Vector2(0, -10), true);
 		cam = new OrthographicCamera();
-		cam.setToOrtho(false, 20, 30);
+		cam.setToOrtho(false, 20, 20);
 		map = new TmxMapLoader().load("Fase1.tmx");
 		debug = new Box2DDebugRenderer();
 		
@@ -69,6 +71,32 @@ public class MyGdxGame extends ApplicationAdapter {
 		        shape.dispose();
 		    }
 		}
+		
+		for (MapObject object : map.getLayers().get("Estaticosq").getObjects()) {
+		    if (object instanceof PolygonMapObject) {
+		        PolygonMapObject polygonObject = (PolygonMapObject) object;
+		        float[] vertices = polygonObject.getPolygon().getTransformedVertices();
+		        Vector2[] worldVertices = new Vector2[vertices.length / 2];
+
+		        for (int i = 0; i < worldVertices.length; i++) {
+		            worldVertices[i] = new Vector2(vertices[i * 2] * escala, vertices[i * 2 + 1] * escala);
+		        }
+
+		        BodyDef bodyDef = new BodyDef();
+		        bodyDef.type = BodyDef.BodyType.StaticBody;
+		        Body body = mundo.createBody(bodyDef);
+
+		        ChainShape shape = new ChainShape();
+		        shape.createLoop(worldVertices);
+
+		        FixtureDef fixtureDef = new FixtureDef();
+		        fixtureDef.shape = shape;
+
+		        body.createFixture(fixtureDef);
+		        shape.dispose(); 
+		    }
+		}
+
 		
 		circle.setRadius(5f * escala);
 		circleBodyDef.type = BodyType.DynamicBody;
@@ -99,13 +127,14 @@ public class MyGdxGame extends ApplicationAdapter {
 			circleBody.applyForceToCenter(-1.0f, 0.0f, true);
 		}
 		
+		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		
 	    float minX = cam.viewportWidth / 2;
 	    float minY = cam.viewportHeight / 2;
 	    
-	    float maxX = 512 - cam.viewportWidth / 2;
-	    float maxY = 320 - cam.viewportHeight / 2;
+	    float maxX = 57 - cam.viewportWidth / 2;
+	    float maxY = 25 - cam.viewportHeight / 2;
 		
 	    float cameraX = MathUtils.clamp(circleBody.getPosition().x, minX, maxX);
 	    float cameraY = MathUtils.clamp(circleBody.getPosition().y, minY, maxY);
