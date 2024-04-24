@@ -33,10 +33,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	private World mundo;
 	
 	
-	private BodyDef circleBodyDef;
-	private CircleShape circle;
-	private Body circleBody;
-	private FixtureDef circleFixture;
+	private BodyDef playerBodyDef;
+	private PolygonShape player;
+	private Body playerBody;
+	private FixtureDef playerFixture;
 	private Box2DDebugRenderer debug;
 	private float posX = 2, posY = 20;
 	
@@ -48,9 +48,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		map = new TmxMapLoader().load("Fase1.tmx");
 		debug = new Box2DDebugRenderer();
 		
-		circle = new CircleShape();
-		circleBodyDef = new BodyDef();
-		circleFixture = new FixtureDef();
+		player = new PolygonShape();
+		playerBodyDef = new BodyDef();
+		playerFixture = new FixtureDef();
 		
 		MapObjects objects = map.getLayers().get("Estaticosq").getObjects();
 
@@ -98,15 +98,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 		
-		circle.setRadius(5f * escala);
-		circleBodyDef.type = BodyType.DynamicBody;
-		circleBodyDef.position.set(posX, posY);
-		circleBody = mundo.createBody(circleBodyDef);
-		circleFixture.shape = circle;
-		circleFixture.density = 0.3f;
-		circleFixture.friction = 0.2f;
-		circleFixture.restitution = 0.6f;
-		circleBody.createFixture(circleFixture);
+		player.setAsBox(0.5f, 1);
+		playerBodyDef.type = BodyType.DynamicBody;
+		playerBodyDef.position.set(posX, posY);
+		playerBody = mundo.createBody(playerBodyDef);
+		playerFixture.shape = player;
+		playerFixture.density = 0.3f;
+		playerFixture.friction = 0.2f;
+		playerFixture.restitution = 0.6f;
+		playerBody.createFixture(playerFixture);
 		
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
@@ -116,15 +116,15 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			circleBody.applyForceToCenter(0.0f, 2.0f, true);
+			playerBody.applyForceToCenter(0.0f, 10.0f, true);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			circleBody.applyForceToCenter(1.0f, 0.0f, true);
+			playerBody.applyForceToCenter(5.0f, 0.0f, true);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			circleBody.applyForceToCenter(-1.0f, 0.0f, true);
+			playerBody.applyForceToCenter(-5.0f, 0.0f, true);
 		}
 		
 		
@@ -136,8 +136,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	    float maxX = 57 - cam.viewportWidth / 2;
 	    float maxY = 25 - cam.viewportHeight / 2;
 		
-	    float cameraX = MathUtils.clamp(circleBody.getPosition().x, minX, maxX);
-	    float cameraY = MathUtils.clamp(circleBody.getPosition().y, minY, maxY);
+	    float cameraX = MathUtils.clamp(playerBody.getPosition().x, minX, maxX);
+	    float cameraY = MathUtils.clamp(playerBody.getPosition().y, minY, maxY);
 	    cam.position.set(cameraX, cameraY, 0);
 	    
 		cam.update();
