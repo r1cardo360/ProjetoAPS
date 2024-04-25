@@ -1,6 +1,5 @@
 ## Java
 
-*.class
 *.war
 *.ear
 hs_err_pid*
@@ -33,9 +32,6 @@ com_crashlytics_export_strings.xml
 ## Eclipse
 
 .metadata/
-/android/bin/
-/html/bin/
-/ios/bin/
 *.tmp
 *.bak
 *.swp
