@@ -34,15 +34,12 @@ com_crashlytics_export_strings.xml
 
 .metadata/
 /android/bin/
-/core/bin/
-/desktop/bin/
 /html/bin/
 /ios/bin/
 *.tmp
 *.bak
 *.swp
 *~.nib
-.settings/
 .loadpath
 .externalToolBuilders/
 *.launch
