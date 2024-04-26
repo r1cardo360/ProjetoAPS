@@ -4,6 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -19,7 +21,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -31,6 +32,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	private TiledMap map;
 	private OrthographicCamera cam;
 	private World mundo;
+	private Texture teste;
+	private SpriteBatch batch;
 	
 	
 	private BodyDef playerBodyDef;
@@ -51,6 +54,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		player = new PolygonShape();
 		playerBodyDef = new BodyDef();
 		playerFixture = new FixtureDef();
+		
+		teste = new Texture(Gdx.files.internal("Gari_default.png"));
+		batch = new SpriteBatch();
 		
 		MapObjects objects = map.getLayers().get("Estaticosq").getObjects();
 
@@ -98,7 +104,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 		
-		player.setAsBox(0.5f, 1);
+		player.setAsBox(1, 1);
 		playerBodyDef.type = BodyType.DynamicBody;
 		playerBodyDef.position.set(posX, posY);
 		playerBody = mundo.createBody(playerBodyDef);
@@ -116,7 +122,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			playerBody.applyForceToCenter(0.0f, 10.0f, true);
+			playerBody.applyForceToCenter(0.0f, 30.0f, true);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -148,6 +154,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		renderer.render();
 		
 		debug.render(mundo, cam.combined);
+		
+		batch.setProjectionMatrix(cam.combined);
+		batch.begin();
+		batch.draw(teste, playerBody.getPosition().x -1, playerBody.getPosition().y -1, 2, 2);
+		batch.end();
 
 	}
 	
