@@ -104,7 +104,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 		
-		player.setAsBox(1, 1);
+		player.setAsBox(0.6f, 0.9f);
 		playerBodyDef.type = BodyType.DynamicBody;
 		playerBodyDef.position.set(posX, posY);
 		playerBody = mundo.createBody(playerBodyDef);
@@ -157,7 +157,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
-		batch.draw(teste, playerBody.getPosition().x -1, playerBody.getPosition().y -1, 2, 2);
+		batch.draw(teste, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
 		batch.end();
 
 	}
