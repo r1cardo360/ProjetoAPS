@@ -111,7 +111,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerFixture.shape = player;
 		playerFixture.density = 1f;
 		playerFixture.friction = 0.2f;
-		playerFixture.restitution = 0.6f;
+		playerFixture.restitution = 0.0f;
 		playerBody.createFixture(playerFixture);
 		playerBody.setFixedRotation(true);
 		
