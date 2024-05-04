@@ -123,7 +123,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			playerBody.applyForceToCenter(0.0f, 30.0f, true);
+			playerBody.applyLinearImpulse(new Vector2(0, 4f), playerBody.getWorldCenter(), true);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
