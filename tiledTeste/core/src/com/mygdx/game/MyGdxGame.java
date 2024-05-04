@@ -109,7 +109,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerBodyDef.position.set(posX, posY);
 		playerBody = mundo.createBody(playerBodyDef);
 		playerFixture.shape = player;
-		playerFixture.density = 0.3f;
+		playerFixture.density = 1f;
 		playerFixture.friction = 0.2f;
 		playerFixture.restitution = 0.6f;
 		playerBody.createFixture(playerFixture);
