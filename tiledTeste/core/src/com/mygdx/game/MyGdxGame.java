@@ -113,6 +113,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerFixture.friction = 0.2f;
 		playerFixture.restitution = 0.6f;
 		playerBody.createFixture(playerFixture);
+		playerBody.setFixedRotation(true);
 		
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
