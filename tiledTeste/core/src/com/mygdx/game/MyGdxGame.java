@@ -34,6 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private World mundo;
 	private Texture teste;
 	private SpriteBatch batch;
+	private boolean isJumping;
 	
 	
 	private BodyDef playerBodyDef;
@@ -122,8 +123,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.W) && isJumping == false) {
 			playerBody.applyLinearImpulse(new Vector2(0, 4f), playerBody.getWorldCenter(), true);
+			isJumping = true;
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
