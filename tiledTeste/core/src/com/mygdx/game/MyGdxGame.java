@@ -21,7 +21,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -73,8 +78,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		        shape.setAsBox(rect.getWidth() / 2 / 16, rect.getHeight() / 2 / 16);
 		        FixtureDef fixtureDef = new FixtureDef();
 		        fixtureDef.shape = shape;
-		        body.createFixture(fixtureDef);
+		        Fixture fixture = body.createFixture(fixtureDef);
 
+		        fixture.setUserData("chao");
 		        shape.dispose();
 		    }
 		}
@@ -99,10 +105,54 @@ public class MyGdxGame extends ApplicationAdapter {
 		        FixtureDef fixtureDef = new FixtureDef();
 		        fixtureDef.shape = shape;
 
-		        body.createFixture(fixtureDef);
+		        Fixture fixture = body.createFixture(fixtureDef);
+		        fixture.setUserData("chao");
 		        shape.dispose(); 
 		    }
 		}
+		
+		mundo.setContactListener(new ContactListener() {
+			
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void endContact(Contact contact) {
+			    Fixture fixtureA = contact.getFixtureA();
+			    Fixture fixtureB = contact.getFixtureB();
+
+			    if ((fixtureA.getBody() == playerBody && fixtureB.getUserData() != null && fixtureB.getUserData().equals("chao")) ||
+			        (fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao"))) {
+			        // O jogador deixou de colidir com o chão
+			        isJumping = true;
+			        System.out.println("teste fim do contato");
+			    }
+				
+			}
+			
+			@Override
+			public void beginContact(Contact contact) {
+			    Fixture fixtureA = contact.getFixtureA();
+			    Fixture fixtureB = contact.getFixtureB();
+
+			    if (fixtureA.getBody() == playerBody && fixtureB.getUserData() != null && fixtureB.getUserData().equals("chao")||
+			    	fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao")){
+			        // O jogador colidiu com o chão
+			        isJumping = false;
+			        System.out.println("teste inicio do contato");
+			    }
+				
+			}
+		});
 
 		
 		player.setAsBox(0.6f, 0.9f);
@@ -124,8 +174,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && isJumping == false) {
-			playerBody.applyLinearImpulse(new Vector2(0, 4f), playerBody.getWorldCenter(), true);
-			isJumping = true;
+			playerBody.applyLinearImpulse(new Vector2(0, 7f), playerBody.getWorldCenter(), true);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
