@@ -39,13 +39,13 @@ public class MyGdxGame extends ApplicationAdapter {
 	private TiledMap map;
 	private OrthographicCamera cam;
 	private World mundo;
-	private Texture gari;
+	private Texture gariStopRight, gariStopLeft;
 	private SpriteBatch batch;
 	private boolean isJumping;
 	
-	private Texture walkrightSheet;
-	private TextureRegion[][] walkFrames;
-	private Animation<TextureRegion> walkAnimation;
+	private Texture walkrightSheet, walkleftSheet;
+	private TextureRegion[][] walkrightFrames, walkleftFrames;
+	private Animation<TextureRegion> walkAnimationright, walkAnimationleft;
 	private float statetime;
 	
 	private BodyDef playerBodyDef;
@@ -66,19 +66,34 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerBodyDef = new BodyDef();
 		playerFixture = new FixtureDef();
 		
-		gari = new Texture(Gdx.files.internal("Gari_default.png"));
+		//Aplicando animação
+		gariStopRight = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_stop_right.png"));
+		gariStopLeft = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_stop_left.png"));
 		batch = new SpriteBatch();
 		
 		walkrightSheet = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_walk_right.png"));
-		TextureRegion[][] tmp = TextureRegion.split(walkrightSheet, 32, 32);
-		walkFrames = new TextureRegion[2][2];
+		TextureRegion[][] tmpright = TextureRegion.split(walkrightSheet, 32, 32);
+		walkrightFrames = new TextureRegion[2][2];
 		for(int i = 0; i<2; i++) {
 			for(int j = 0; j<2; j++) {
-				walkFrames[i][j] = tmp[i][j];
+				walkrightFrames[i][j] = tmpright[i][j];
 			}
 		}
-		walkAnimation = new Animation<TextureRegion>(0.25f, walkFrames[0]);
+		walkAnimationright = new Animation<TextureRegion>(0.25f, walkrightFrames[0]);
 		statetime = 0f;
+		
+		walkleftSheet = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_walk_left.png"));
+		TextureRegion[][] tmpleft = TextureRegion.split(walkleftSheet, 32, 32);
+		walkleftFrames = new TextureRegion[1][3];
+		for(int i = 0; i<1; i++) {
+			for (int j = 0; j<3; j++) {
+				walkleftFrames[i][j] = tmpleft[i][j];
+			}
+		}
+		walkAnimationleft = new Animation<TextureRegion>(0.25f, walkleftFrames[0]);
+		
+		
+		
 		
 		MapObjects objects = map.getLayers().get("Estaticosq").getObjects();
 
@@ -194,18 +209,21 @@ public class MyGdxGame extends ApplicationAdapter {
 			playerBody.applyLinearImpulse(new Vector2(0, 7f), playerBody.getWorldCenter(), true);
 		}
 		
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
 		    playerBody.setLinearVelocity(2.0f, playerBody.getLinearVelocity().y);
-		    // Altera a textura para a animação de caminhada
-		    currentFrame = walkAnimation.getKeyFrame(statetime, true);
-	    } else {
-	        // Se não estiver pressionando D, usa a textura de gari
-	        currentFrame = new TextureRegion(gari);
-	        statetime = 0;
-	    }
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			playerBody.setLinearVelocity(-2.0f, playerBody.getLinearVelocity().y);
+		    // Altera a textura para a animação de caminhada para a direita
+		    currentFrame = walkAnimationright.getKeyFrame(statetime, true);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+		    playerBody.setLinearVelocity(-2.0f, playerBody.getLinearVelocity().y);
+		    // Altera a textura para a animação de caminhada para a esquerda
+		    currentFrame = walkAnimationleft.getKeyFrame(statetime, true);
+		} else {
+		    // Se não estiver pressionando A ou D, usa a textura de gari parado
+		    if (playerBody.getLinearVelocity().x >= 0) {
+		        currentFrame = new TextureRegion(gariStopRight);
+		    } else {
+		        currentFrame = new TextureRegion(gariStopLeft);
+		    }
 		}
 		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
