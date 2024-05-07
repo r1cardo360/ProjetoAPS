@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -37,17 +39,20 @@ public class MyGdxGame extends ApplicationAdapter {
 	private TiledMap map;
 	private OrthographicCamera cam;
 	private World mundo;
-	private Texture teste;
+	private Texture gari;
 	private SpriteBatch batch;
 	private boolean isJumping;
 	
+	private Texture walkrightSheet;
+	private TextureRegion[][] walkFrames;
+	private Animation<TextureRegion> walkAnimation;
+	private float statetime;
 	
 	private BodyDef playerBodyDef;
 	private PolygonShape player;
 	private Body playerBody;
 	private FixtureDef playerFixture;
 	private Box2DDebugRenderer debug;
-	private float posX = 2, posY = 20;
 	
 	@Override
 	public void create () {
@@ -61,8 +66,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerBodyDef = new BodyDef();
 		playerFixture = new FixtureDef();
 		
-		teste = new Texture(Gdx.files.internal("Gari_default.png"));
+		gari = new Texture(Gdx.files.internal("Gari_default.png"));
 		batch = new SpriteBatch();
+		
+		walkrightSheet = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_walk_right.png"));
+		TextureRegion[][] tmp = TextureRegion.split(walkrightSheet, 32, 32);
+		walkFrames = new TextureRegion[2][2];
+		for(int i = 0; i<2; i++) {
+			for(int j = 0; j<2; j++) {
+				walkFrames[i][j] = tmp[i][j];
+			}
+		}
+		walkAnimation = new Animation<TextureRegion>(0.25f, walkFrames[0]);
+		statetime = 0f;
 		
 		MapObjects objects = map.getLayers().get("Estaticosq").getObjects();
 
@@ -134,7 +150,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			        (fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao"))) {
 			        // O jogador deixou de colidir com o chão
 			        isJumping = true;
-			        System.out.println("teste fim do contato");
 			    }
 				
 			}
@@ -148,7 +163,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			    	fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao")){
 			        // O jogador colidiu com o chão
 			        isJumping = false;
-			        System.out.println("teste inicio do contato");
 			    }
 				
 			}
@@ -157,7 +171,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		player.setAsBox(0.6f, 0.9f);
 		playerBodyDef.type = BodyType.DynamicBody;
-		playerBodyDef.position.set(posX, posY);
+		playerBodyDef.position.set(1.16f, 3.915f);
 		playerBody = mundo.createBody(playerBodyDef);
 		playerFixture.shape = player;
 		playerFixture.density = 1f;
@@ -173,18 +187,26 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		
+		statetime += Gdx.graphics.getDeltaTime();
+		TextureRegion currentFrame = null;
+		
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && isJumping == false) {
 			playerBody.applyLinearImpulse(new Vector2(0, 7f), playerBody.getWorldCenter(), true);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			playerBody.applyForceToCenter(5.0f, 0.0f, true);
-		}
+		    playerBody.setLinearVelocity(2.0f, playerBody.getLinearVelocity().y);
+		    // Altera a textura para a animação de caminhada
+		    currentFrame = walkAnimation.getKeyFrame(statetime, true);
+	    } else {
+	        // Se não estiver pressionando D, usa a textura de gari
+	        currentFrame = new TextureRegion(gari);
+	        statetime = 0;
+	    }
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			playerBody.applyForceToCenter(-5.0f, 0.0f, true);
+			playerBody.setLinearVelocity(-2.0f, playerBody.getLinearVelocity().y);
 		}
-		
 		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		
@@ -209,8 +231,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
-		batch.draw(teste, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
+		batch.draw(currentFrame, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
 		batch.end();
+		
 
 	}
 	
