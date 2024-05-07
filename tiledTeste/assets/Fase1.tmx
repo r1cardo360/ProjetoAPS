@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="57" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="20">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="57" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="35">
  <tileset firstgid="1" name="Assets_City" tilewidth="16" tileheight="16" tilecount="238" columns="17">
   <image source="tiles/Action Pack - CITY/Assets/Assets_City.png" width="272" height="224"/>
  </tileset>
@@ -56,6 +56,28 @@
   <object id="19" x="320" y="320">
    <polygon points="0,0 16,0 32,16 64,16 64,23 32,23.3333 16,7.66667 0,7.66667"/>
   </object>
+  <object id="21" x="655.333" y="240.333">
+   <polygon points="0,0 -152.333,-0.333333 -152.333,5 8.66667,5.66667 8.33333,0"/>
+  </object>
+  <object id="22" x="416.333" y="224.667">
+   <polygon points="0,0 63.6667,-0.666667 63.6667,5.66667 0,5.33333"/>
+  </object>
+  <object id="28" x="128" y="64">
+   <polygon points="0,0 0,48 -112,48 -112,0"/>
+  </object>
+  <object id="29" x="160.182" y="48.1818">
+   <polygon points="0,0 79.8182,-0.181818 95.8182,-16.1818 287.818,-16.1818 319.818,15.8182 495.818,15.8182 511.818,31.8182 607.818,31.8182 623.818,47.8182 617.443,47.6932 608.193,38.5682 511.818,38.4432 496.068,22.4432 319.943,22.4432 288.443,-9.55682 95.0682,-9.43182 79.5682,6.69318 -0.0568182,6.56818"/>
+  </object>
+  <object id="33" x="478" y="175.909">
+   <polygon points="0,0 306,0.0909091 306.043,7.04743 -0.0869565,7.04743"/>
+  </object>
+  <object id="34" x="402.818" y="176">
+   <polygon points="0,0 -34.8182,0 -50.8182,-16 -98.8182,-16 -114.818,-32 -210.818,-32 -242.818,-64 -274.818,-64 -274.818,-57.25 -242.443,-57.125 -210.818,-25.25 -114.318,-25.25 -98.6932,-9.625 -50.3182,-9.25 -34.8182,6.5 0.181818,6.86957"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Chaopassa">
+  <object id="30" x="688.03" y="255.879" width="47.9394" height="6.12121"/>
+  <object id="32" x="402.909" y="176" width="74.9091" height="6.81818"/>
  </objectgroup>
  <layer id="3" name="Fundo" width="57" height="25">
   <data encoding="csv">
