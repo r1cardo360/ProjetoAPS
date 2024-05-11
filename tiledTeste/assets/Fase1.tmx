@@ -41,7 +41,7 @@
 1296,1296,1296,1296,1296,1296,1296,1296,1296,1296,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="7" name="LinhasBTela" visible="0">
+ <objectgroup id="7" name="LinhasBTela">
   <object id="35" x="0" y="0">
    <polygon points="0,0 0,400 912,400 912,0"/>
   </object>
@@ -49,7 +49,7 @@
  <objectgroup id="5" name="Chao">
   <object id="1" x="2" y="352" width="126" height="9.75"/>
   <object id="2" x="128.314" y="336" width="31.6857" height="10.25"/>
-  <object id="3" x="160.242" y="320.006" width="159.511" height="16.0206"/>
+  <object id="3" x="160.265" y="320.006" width="159.489" height="16.0206"/>
   <object id="43" x="688.248" y="320.004" width="15.5" height="15.9901"/>
   <object id="46" x="704.27" y="304" width="31.4883" height="12"/>
   <object id="48" x="784.247" y="96.0097" width="127.566" height="15.9903"/>
@@ -58,7 +58,7 @@
   <object id="60" x="503.266" y="240.004" width="161.477" height="6.00391"/>
   <object id="63" x="416.25" y="224" width="63.5038" height="4.99219"/>
   <object id="65" x="464.263" y="176.006" width="319.723" height="6.99436"/>
-  <object id="75" x="368.015" y="176.01" width="47.7202" height="6.98118"/>
+  <object id="75" x="367.954" y="176.01" width="47.7813" height="6.98118"/>
   <object id="76" x="319.995" y="160.005" width="47.763" height="6.99681"/>
   <object id="77" x="207.984" y="144.009" width="111.759" height="6.98118"/>
   <object id="78" x="127.993" y="112.009" width="79.7569" height="6.98118"/>
@@ -70,7 +70,7 @@
  </objectgroup>
  <objectgroup id="9" name="Paredes">
   <object id="37" x="127.989" y="335.989" width="0.251812" height="15.9565"/>
-  <object id="38" x="160.008" y="320.008" width="0.238281" height="15.9922"/>
+  <object id="38" x="160.008" y="320.008" width="0.25" height="15.9922"/>
   <object id="41" x="688.004" y="320" width="0.25" height="15.9961"/>
   <object id="42" x="703.754" y="320.006" width="0.25" height="15.9961"/>
   <object id="44" x="735.752" y="304.008" width="0.25" height="11.9985"/>
@@ -84,7 +84,7 @@
   <object id="62" x="416" y="224.002" width="0.25" height="4.99609"/>
   <object id="64" x="464.008" y="176.003" width="0.25" height="6.99245"/>
   <object id="66" x="415.744" y="176.008" width="0.25" height="6.99245"/>
-  <object id="67" x="367.747" y="160.007" width="0.25" height="16.9534"/>
+  <object id="67" x="367.74" y="160.007" width="0.27" height="20.6867"/>
   <object id="68" x="319.744" y="144.008" width="0.25" height="16.9534"/>
   <object id="69" x="207.747" y="112.015" width="0.25" height="33.1721"/>
   <object id="70" x="160.005" y="48.0082" width="0.25" height="6.98941"/>

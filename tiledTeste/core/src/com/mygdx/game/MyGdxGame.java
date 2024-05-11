@@ -45,28 +45,30 @@ public class MyGdxGame extends ApplicationAdapter {
 	private World mundo;
 	private Texture gariStopRight, gariStopLeft;
 	private SpriteBatch batch;
-	private boolean isJumping;
+	private boolean isJumping, isDead = false;
 	
-	private Texture walkrightSheet, walkleftSheet;
-	private TextureRegion[][] walkrightFrames, walkleftFrames;
-	private Animation<TextureRegion> walkAnimationright, walkAnimationleft;
+	private Texture walkrightSheet, walkleftSheet, enemyLixoTexture;
+	private TextureRegion[][] walkrightFrames, walkleftFrames, enemyFrames;
+	private Animation<TextureRegion> walkAnimationright, walkAnimationleft, enemyLixoAnimation;
 	private float statetime;
 	
-	private BodyDef playerBodyDef, lixoBodyDef;
-	private Body playerBody, lixoBody;
-	private FixtureDef playerFixture, lixoFixture;
+	private BodyDef playerBodyDef, lixoBodyDef, enemyLixoBodyDef;
+	private Body playerBody, lixoBody, enemyLixoBody;
+	private FixtureDef playerFixture, lixoFixture, enemyLixoFixture;
 	private Box2DDebugRenderer debug;
 	private PolygonShape player;
-	private CircleShape lixo;
+	private CircleShape lixo, enemyLixo;
 	private float maxSpeed = 3;
 	
 	private Viewport viewport;
 	private Stage stage;
 	
+	private float enemyLixoX = 27, enemyLixoY = 4.5f;
+	
 	@Override
 	public void create () {
 		
-		viewport = new FitViewport(800, 700);
+		viewport = new FitViewport(700, 600);
 		stage = new Stage(viewport);
 		Gdx.input.setInputProcessor(stage);
 		
@@ -84,6 +86,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		lixo = new CircleShape();
 		lixoBodyDef = new BodyDef();
 		lixoFixture = new FixtureDef();
+		
+		enemyLixo = new CircleShape();
+		enemyLixoBodyDef = new BodyDef();
+		enemyLixoFixture = new FixtureDef();
 		
 		//Aplicando animação
 		gariStopRight = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_stop_right.png"));
@@ -109,9 +115,19 @@ public class MyGdxGame extends ApplicationAdapter {
 				walkleftFrames[i][j] = tmpleft[i][j];
 			}
 		}
+		
 		walkAnimationleft = new Animation<TextureRegion>(0.25f, walkleftFrames[0]);
 		
+		enemyLixoTexture = new Texture(Gdx.files.internal("Enemy/enemyLixo.png"));
+		TextureRegion[][] tmpEnemyLixo = TextureRegion.split(enemyLixoTexture, 38, 34);
+		enemyFrames = new TextureRegion[1][13];
+		for(int i = 0; i<1; i++) {
+			for(int j = 0; j< 13; j++) {
+				enemyFrames[i][j] = tmpEnemyLixo[i][j];
+			}
+		}
 		
+		enemyLixoAnimation = new Animation<TextureRegion>(0.05f, enemyFrames[0]);
 		
 		
 		MapObjects objects = map.getLayers().get("Chao").getObjects();
@@ -284,6 +300,16 @@ public class MyGdxGame extends ApplicationAdapter {
 		lixoFixture.restitution = 1.1f;
 		lixoBody.createFixture(lixoFixture);
 		
+		enemyLixo.setRadius(0.50f);
+		enemyLixoBodyDef.type = BodyType.KinematicBody;
+		enemyLixoBodyDef.position.set(enemyLixoX, enemyLixoY);
+		enemyLixoBody = mundo.createBody(enemyLixoBodyDef);
+		enemyLixoFixture.shape = enemyLixo;
+		enemyLixoFixture.density = 1f;
+		enemyLixoFixture.friction = 0.2f;
+		enemyLixoFixture.restitution = 0.8f;
+		enemyLixoBody.createFixture(enemyLixoFixture);
+		
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
 	}
@@ -295,6 +321,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		
 		
 		statetime += Gdx.graphics.getDeltaTime();
 		TextureRegion currentFrame = null;
@@ -329,6 +356,16 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		}
 		
+		//enemyLixo
+		
+		if( enemyLixoBody.getPosition().x <= 27) {
+			enemyLixoBody.setLinearVelocity(1.5f, 0);
+		}else if(enemyLixoBody.getPosition().x >= 40) {
+			enemyLixoBody.setLinearVelocity(-1.5f, 0);
+		}
+		
+		TextureRegion currentEnemyFrame = enemyLixoAnimation.getKeyFrame(statetime, true);
+		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		
 	    float minX = cam.viewportWidth / 2;
@@ -353,6 +390,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 		batch.draw(currentFrame, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
+		batch.draw(currentEnemyFrame, enemyLixoBody.getPosition().x -0.7f, enemyLixoBody.getPosition().y -0.5f, 1, 1);
 		batch.end();
 		
         stage.act(Gdx.graphics.getDeltaTime());
