@@ -32,7 +32,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MyGdxGame extends ApplicationAdapter {
 	private float escala = 1/16f;
@@ -57,8 +60,16 @@ public class MyGdxGame extends ApplicationAdapter {
 	private CircleShape lixo;
 	private float maxSpeed = 3;
 	
+	private Viewport viewport;
+	private Stage stage;
+	
 	@Override
 	public void create () {
+		
+		viewport = new FitViewport(800, 700);
+		stage = new Stage(viewport);
+		Gdx.input.setInputProcessor(stage);
+		
 		mundo = new World(new Vector2(0, -10), true);
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, 20, 20);
@@ -276,6 +287,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
 	}
+	
+	@Override
+	public void resize(int width, int height){
+		viewport.update(width, height, true);
+	}
 
 	@Override
 	public void render () {
@@ -339,11 +355,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.draw(currentFrame, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
 		batch.end();
 		
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
+		
 
 	}
 	
 	@Override
 	public void dispose () {
-
+		stage.dispose();
 	}
 }
