@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -48,11 +49,13 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Animation<TextureRegion> walkAnimationright, walkAnimationleft;
 	private float statetime;
 	
-	private BodyDef playerBodyDef;
-	private PolygonShape player;
-	private Body playerBody;
-	private FixtureDef playerFixture;
+	private BodyDef playerBodyDef, lixoBodyDef;
+	private Body playerBody, lixoBody;
+	private FixtureDef playerFixture, lixoFixture;
 	private Box2DDebugRenderer debug;
+	private PolygonShape player;
+	private CircleShape lixo;
+	private float maxSpeed = 3;
 	
 	@Override
 	public void create () {
@@ -63,8 +66,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		debug = new Box2DDebugRenderer();
 		
 		player = new PolygonShape();
+		//player = new CircleShape();
 		playerBodyDef = new BodyDef();
 		playerFixture = new FixtureDef();
+		
+		lixo = new CircleShape();
+		lixoBodyDef = new BodyDef();
+		lixoFixture = new FixtureDef();
 		
 		//Aplicando animação
 		gariStopRight = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_stop_right.png"));
@@ -95,7 +103,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		
 		
-		MapObjects objects = map.getLayers().get("Estaticosq").getObjects();
+		MapObjects objects = map.getLayers().get("Chao").getObjects();
 
 		for (MapObject object : objects) {
 		    if (object instanceof RectangleMapObject) {
@@ -116,7 +124,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		    }
 		}
 		
-		for (MapObject object : map.getLayers().get("Estaticosq").getObjects()) {
+		for (MapObject object : map.getLayers().get("Chao").getObjects()) {
 		    if (object instanceof PolygonMapObject) {
 		        PolygonMapObject polygonObject = (PolygonMapObject) object;
 		        float[] vertices = polygonObject.getPolygon().getTransformedVertices();
@@ -142,6 +150,53 @@ public class MyGdxGame extends ApplicationAdapter {
 		    }
 		}
 		
+		for (MapObject object : map.getLayers().get("LinhasBTela").getObjects()) {
+		    if (object instanceof PolygonMapObject) {
+		        PolygonMapObject polygonObject = (PolygonMapObject) object;
+		        float[] vertices = polygonObject.getPolygon().getTransformedVertices();
+		        Vector2[] worldVertices = new Vector2[vertices.length / 2];
+
+		        for (int i = 0; i < worldVertices.length; i++) {
+		            worldVertices[i] = new Vector2(vertices[i * 2] * escala, vertices[i * 2 + 1] * escala);
+		        }
+
+		        BodyDef bodyDef = new BodyDef();
+		        bodyDef.type = BodyDef.BodyType.StaticBody;
+		        Body body = mundo.createBody(bodyDef);
+
+		        ChainShape shape = new ChainShape();
+		        shape.createLoop(worldVertices);
+
+		        FixtureDef fixtureDef = new FixtureDef();
+		        fixtureDef.shape = shape;
+
+		        Fixture fixture = body.createFixture(fixtureDef);
+		        fixture.setUserData("parede");
+		        shape.dispose(); 
+		    }
+		}
+		
+		MapObjects objectsParede = map.getLayers().get("Paredes").getObjects();
+
+		for (MapObject object : objectsParede) {
+		    if (object instanceof RectangleMapObject) {
+		        Rectangle rect = ((RectangleMapObject) object).getRectangle();
+		        BodyDef bodyDef = new BodyDef();
+		        bodyDef.type = BodyDef.BodyType.StaticBody;
+		        bodyDef.position.set((rect.getX() + rect.getWidth() / 2) / 16, (rect.getY() + rect.getHeight() / 2) / 16);
+		        Body body = mundo.createBody(bodyDef);
+
+		        PolygonShape shape = new PolygonShape();
+		        shape.setAsBox(rect.getWidth() / 2 / 16, rect.getHeight() / 2 / 16);
+		        FixtureDef fixtureDef = new FixtureDef();
+		        fixtureDef.shape = shape;
+		        Fixture fixture = body.createFixture(fixtureDef);
+
+		        fixture.setUserData("parede");
+		        shape.dispose();
+		    }
+		}
+		
 		mundo.setContactListener(new ContactListener() {
 			
 			@Override
@@ -164,7 +219,8 @@ public class MyGdxGame extends ApplicationAdapter {
 			    if ((fixtureA.getBody() == playerBody && fixtureB.getUserData() != null && fixtureB.getUserData().equals("chao")) ||
 			        (fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao"))) {
 			        // O jogador deixou de colidir com o chão
-			        isJumping = true;
+			        isJumping = false;
+			        System.out.println("fim do contato");
 			    }
 				
 			}
@@ -177,7 +233,8 @@ public class MyGdxGame extends ApplicationAdapter {
 			    if (fixtureA.getBody() == playerBody && fixtureB.getUserData() != null && fixtureB.getUserData().equals("chao")||
 			    	fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao")){
 			        // O jogador colidiu com o chão
-			        isJumping = false;
+			        isJumping = true;
+			        System.out.println("Inicio do contato");
 			    }
 				
 			}
@@ -185,6 +242,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		
 		player.setAsBox(0.6f, 0.9f);
+		//player.setRadius(0.9f);
 		playerBodyDef.type = BodyType.DynamicBody;
 		playerBodyDef.position.set(1.16f, 3.915f);
 		playerBody = mundo.createBody(playerBodyDef);
@@ -194,6 +252,26 @@ public class MyGdxGame extends ApplicationAdapter {
 		playerFixture.restitution = 0.0f;
 		playerBody.createFixture(playerFixture);
 		playerBody.setFixedRotation(true);
+		
+		lixo.setRadius(0.40f);
+		lixoBodyDef.type = BodyType.KinematicBody;
+		lixoBodyDef.position.set(45.5f, 6.5f);
+		lixoBody = mundo.createBody(lixoBodyDef);
+		lixoFixture.shape = lixo;
+		lixoFixture.density = 0;
+		lixoFixture.friction = 0;
+		lixoFixture.restitution = 3;
+		lixoBody.createFixture(lixoFixture);
+		
+		lixo.setRadius(0.40f);
+		lixoBodyDef.type = BodyType.KinematicBody;
+		lixoBodyDef.position.set(26.5f, 11.5f);
+		lixoBody = mundo.createBody(lixoBodyDef);
+		lixoFixture.shape = lixo;
+		lixoFixture.density = 0;
+		lixoFixture.friction = 0;
+		lixoFixture.restitution = 1.1f;
+		lixoBody.createFixture(lixoFixture);
 		
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
@@ -205,25 +283,34 @@ public class MyGdxGame extends ApplicationAdapter {
 		statetime += Gdx.graphics.getDeltaTime();
 		TextureRegion currentFrame = null;
 		
-		if(Gdx.input.isKeyPressed(Input.Keys.W) && isJumping == false) {
-			playerBody.applyLinearImpulse(new Vector2(0, 7f), playerBody.getWorldCenter(), true);
+		Vector2 velocity = playerBody.getLinearVelocity();
+		
+		if(Math.abs(velocity.x) > maxSpeed) {
+			velocity.x = Math.signum(velocity.x) * maxSpeed;
+			playerBody.setLinearVelocity(velocity.x, velocity.y);
 		}
 		
+		if(Gdx.input.isKeyPressed(Input.Keys.W) && isJumping == true) {
+			playerBody.applyLinearImpulse(new Vector2(0, 15f), playerBody.getWorldCenter(), true);
+			isJumping = false;
+		}
+		
+			
 		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-		    playerBody.setLinearVelocity(2.0f, playerBody.getLinearVelocity().y);
-		    // Altera a textura para a animação de caminhada para a direita
-		    currentFrame = walkAnimationright.getKeyFrame(statetime, true);
+			playerBody.applyForceToCenter(10f, 0, true);
+			// Altera a textura para a animação de caminhada para a direita
+			currentFrame = walkAnimationright.getKeyFrame(statetime, true);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-		    playerBody.setLinearVelocity(-2.0f, playerBody.getLinearVelocity().y);
-		    // Altera a textura para a animação de caminhada para a esquerda
-		    currentFrame = walkAnimationleft.getKeyFrame(statetime, true);
+			playerBody.applyForceToCenter(-10f, 0, true);
+			// Altera a textura para a animação de caminhada para a esquerda
+			currentFrame = walkAnimationleft.getKeyFrame(statetime, true);
 		} else {
-		    // Se não estiver pressionando A ou D, usa a textura de gari parado
-		    if (playerBody.getLinearVelocity().x >= 0) {
-		        currentFrame = new TextureRegion(gariStopRight);
-		    } else {
-		        currentFrame = new TextureRegion(gariStopLeft);
-		    }
+				// Se não estiver pressionando A ou D, usa a textura de gari parado
+			if (playerBody.getLinearVelocity().x >= 0) {
+				currentFrame = new TextureRegion(gariStopRight);
+			} else {
+				currentFrame = new TextureRegion(gariStopLeft);
+			}
 		}
 		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);

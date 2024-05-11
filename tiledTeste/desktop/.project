@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>My GDX Game-desktop</name>
-	<comment>Project My GDX Game-desktop created by Buildship.</comment>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -24,7 +24,7 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<location>C:/Users/Nivaldo/Desktop/LibGDX/tiledTeste/assets</location>
+			<location>D:/Java_codigo/ProjetoAPS/tiledTeste/assets</location>
 		</link>
 	</linkedResources>
 </projectDescription>
