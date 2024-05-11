@@ -300,7 +300,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		lixoFixture.restitution = 1.1f;
 		lixoBody.createFixture(lixoFixture);
 		
-		enemyLixo.setRadius(0.50f);
+		enemyLixo.setRadius(0.45f);
 		enemyLixoBodyDef.type = BodyType.KinematicBody;
 		enemyLixoBodyDef.position.set(enemyLixoX, enemyLixoY);
 		enemyLixoBody = mundo.createBody(enemyLixoBodyDef);
@@ -390,7 +390,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 		batch.draw(currentFrame, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
-		batch.draw(currentEnemyFrame, enemyLixoBody.getPosition().x -0.7f, enemyLixoBody.getPosition().y -0.5f, 1, 1);
+		batch.draw(currentEnemyFrame, enemyLixoBody.getPosition().x -0.46f, enemyLixoBody.getPosition().y -0.5f, 1, 1);
 		batch.end();
 		
         stage.act(Gdx.graphics.getDeltaTime());
