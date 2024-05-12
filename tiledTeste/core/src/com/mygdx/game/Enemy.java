@@ -22,6 +22,7 @@ public class Enemy {
 	private FixtureDef enemyLixoFixture;
 	private float stateTime;
 	private SpriteBatch batch;
+	private float radius = 0.45f;
 	
 	public Enemy() {
 		
@@ -91,13 +92,21 @@ public class Enemy {
 		this.enemyLixoBody = enemyLixoBody;
 	}
 	
+	public float getRadius() {
+		return this.radius;
+	}
+	
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+	
 	public void criarEnemy(World mundo, float posX, float posY, float density, float friction, float restitution) {
 		enemyLixo = new CircleShape();
 		enemyLixoBodyDef = new BodyDef();
 		enemyLixoFixture = new FixtureDef();
 		batch = new SpriteBatch();
 		
-		enemyLixo.setRadius(0.45f);
+		enemyLixo.setRadius(radius);
 		enemyLixoBodyDef.type = BodyType.KinematicBody;
 		enemyLixoBodyDef.position.set(posX, posY);
 		enemyLixoBody = mundo.createBody(enemyLixoBodyDef);
@@ -119,7 +128,9 @@ public class Enemy {
 			}
 		}
 		
-		return enemyLixoAnimation = new Animation<TextureRegion>(velAnimation, enemyFrames[0]);
+		enemyLixoAnimation = new Animation<TextureRegion>(velAnimation, enemyFrames[0]);
+		
+		return enemyLixoAnimation;
 		
 	}
 	

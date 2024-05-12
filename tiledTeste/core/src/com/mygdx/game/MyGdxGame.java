@@ -47,25 +47,23 @@ public class MyGdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private boolean isJumping, isDead = false;
 	
-	private Texture walkrightSheet, walkleftSheet, enemyLixoTexture;
-	private TextureRegion[][] walkrightFrames, walkleftFrames, enemyFrames, EnemyLixoTextureTeste;
-	private Animation<TextureRegion> walkAnimationright, walkAnimationleft, enemyLixoAnimation, enemyLixoAnimatioTeste;
+	private Texture walkrightSheet, walkleftSheet;
+	private TextureRegion[][] walkrightFrames, walkleftFrames;
+	private Animation<TextureRegion> walkAnimationright, walkAnimationleft, enemyLixoAnimatioTeste;
 	private float statetime;
 	
-	private BodyDef playerBodyDef, lixoBodyDef, enemyLixoBodyDef;
-	private Body playerBody, lixoBody, enemyLixoBody;
-	private FixtureDef playerFixture, lixoFixture, enemyLixoFixture;
+	private BodyDef playerBodyDef, lixoBodyDef;
+	private Body playerBody, lixoBody;
+	private FixtureDef playerFixture, lixoFixture;
 	private Box2DDebugRenderer debug;
 	private PolygonShape player;
-	private CircleShape lixo, enemyLixo;
+	private CircleShape lixo;
 	private float maxSpeed = 3;
 	
 	private Enemy enemyLixoTeste;
 	
 	private Viewport viewport;
 	private Stage stage;
-	
-	private float enemyLixoX = 27, enemyLixoY = 4.5f;
 	
 	@Override
 	public void create () {
@@ -88,10 +86,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		lixo = new CircleShape();
 		lixoBodyDef = new BodyDef();
 		lixoFixture = new FixtureDef();
-		
-//		enemyLixo = new CircleShape();
-//		enemyLixoBodyDef = new BodyDef();
-//		enemyLixoFixture = new FixtureDef();
 		
 		enemyLixoTeste = new Enemy();
 		enemyLixoTeste.criarEnemy(mundo, 27, 4.5f, 1, 0.2f, 0.8f);
@@ -124,17 +118,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 		
 		walkAnimationleft = new Animation<TextureRegion>(0.25f, walkleftFrames[0]);
-//		
-//		enemyLixoTexture = new Texture(Gdx.files.internal("Enemy/enemyLixo.png"));
-//		TextureRegion[][] tmpEnemyLixo = TextureRegion.split(enemyLixoTexture, 38, 34);
-//		enemyFrames = new TextureRegion[1][13];
-//		for(int i = 0; i<1; i++) {
-//			for(int j = 0; j< 13; j++) {
-//				enemyFrames[i][j] = tmpEnemyLixo[i][j];
-//			}
-//		}
-//		
-//		enemyLixoAnimation = new Animation<TextureRegion>(0.05f, enemyFrames[0]);
 		
 		
 		MapObjects objects = map.getLayers().get("Chao").getObjects();
@@ -273,14 +256,14 @@ public class MyGdxGame extends ApplicationAdapter {
 			    
 			    //contact enemey
 			    
-//			    if ((fixtureA.getBody() == playerBody && fixtureB.getBody() == enemyLixoBody)||
-//			    	(fixtureB.getBody() == playerBody && fixtureA.getBody() == enemyLixoBody)){
-//			    	if (playerBody.getPosition().y > enemyLixoBody.getPosition().y + enemyLixo.getRadius()) {
-//			    		System.out.println("Morreu");
-//			    	}else {
-//			    		System.out.println("te matou");
-//			    	}
-//			    }
+			    if ((fixtureA.getBody() == playerBody && fixtureB.getBody() == enemyLixoTeste.getBody())||
+			    	(fixtureB.getBody() == playerBody && fixtureA.getBody() == enemyLixoTeste.getBody())){
+			    	if (playerBody.getPosition().y > enemyLixoTeste.getBody().getPosition().y + enemyLixoTeste.getRadius()) {
+			    		System.out.println("Morreu");
+			    	}else {
+			    		System.out.println("te matou");
+			    	}
+			    }
 			}
 		});
 
@@ -316,16 +299,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		lixoFixture.friction = 0;
 		lixoFixture.restitution = 1.1f;
 		lixoBody.createFixture(lixoFixture);
-		
-//		enemyLixo.setRadius(0.45f);
-//		enemyLixoBodyDef.type = BodyType.KinematicBody;
-//		enemyLixoBodyDef.position.set(enemyLixoX, enemyLixoY);
-//		enemyLixoBody = mundo.createBody(enemyLixoBodyDef);
-//		enemyLixoFixture.shape = enemyLixo;
-//		enemyLixoFixture.density = 1f;
-//		enemyLixoFixture.friction = 0.2f;
-//		enemyLixoFixture.restitution = 0.8f;
-//		enemyLixoBody.createFixture(enemyLixoFixture);
 		
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
@@ -375,17 +348,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		//enemyLixo
 		
-//		if( enemyLixoBody.getPosition().x <= 27) {
-//			enemyLixoBody.setLinearVelocity(1.5f, 0);
-//		}else if(enemyLixoBody.getPosition().x >= 40) {
-//			enemyLixoBody.setLinearVelocity(-1.5f, 0);
-//		}
-		
 		enemyLixoTeste.movimentacaoEnemy(27, 40);
-		TextureRegion currentEnemyFrame = enemyLixoTeste.quadroAtualDaAnimacao(0, enemyLixoAnimatioTeste);
+		TextureRegion currentEnemyFrame = enemyLixoAnimatioTeste.getKeyFrame(statetime, true);
 		
-		
-//		TextureRegion currentEnemyFrame = enemyLixoAnimation.getKeyFrame(statetime, true);
 		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
 		
