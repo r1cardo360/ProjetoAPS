@@ -45,11 +45,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	private World mundo;
 	private Texture gariStopRight, gariStopLeft;
 	private SpriteBatch batch;
-	private boolean isJumping, isDead = false;
+	private boolean isJumping, isDead = false, enemy;
 	
 	private Texture walkrightSheet, walkleftSheet;
 	private TextureRegion[][] walkrightFrames, walkleftFrames;
-	private Animation<TextureRegion> walkAnimationright, walkAnimationleft, enemyLixoAnimatioTeste;
+	private Animation<TextureRegion> walkAnimationright, walkAnimationleft, enemyLixoAnimatioLeft, enemyLixoAnimatioRigth;
 	private float statetime;
 	
 	private BodyDef playerBodyDef, lixoBodyDef;
@@ -60,10 +60,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	private CircleShape lixo;
 	private float maxSpeed = 3;
 	
-	private Enemy enemyLixoTeste;
+	private Enemy enemyLixo, enemyLixo2;
 	
 	private Viewport viewport;
 	private Stage stage;
+	private TextureRegion currentEnemyFrame, currentEnemyFrame2;
 	
 	@Override
 	public void create () {
@@ -87,10 +88,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		lixoBodyDef = new BodyDef();
 		lixoFixture = new FixtureDef();
 		
-		enemyLixoTeste = new Enemy();
-		enemyLixoTeste.criarEnemy(mundo, 27, 4.5f, 1, 0.2f, 0.8f);
-		enemyLixoAnimatioTeste = enemyLixoTeste.criarAnimacaoEnemy("Enemy/EnemyLixo.png", 38, 34, 1, 13, 0.05f);
+		enemyLixo = new Enemy();
+		enemyLixo.criarEnemy(mundo, 27, 4.5f, 1, 0.2f, 0.8f);
+		enemyLixoAnimatioLeft = enemyLixo.criarAnimacaoEnemy("texture_pack/Trash_bag/Sprite_format/Trash_bag_walking_left.png", 38, 34, 1, 13, 0.05f);
+		enemyLixoAnimatioRigth = enemyLixo.criarAnimacaoEnemy("texture_pack/Trash_bag/Sprite_format/Trash_bag_walking_right.png", 38, 34, 1, 13, 0.05f);
 		
+		enemyLixo2 = new Enemy();
+		enemyLixo2.criarEnemy(mundo, 5.5f, 21.5f, 1, 0.2f, 0.8f);
 		
 		//Aplicando animação
 		gariStopRight = new Texture(Gdx.files.internal("texture_pack/Gari/Sprite_format/Gari_default.png"));
@@ -256,9 +260,9 @@ public class MyGdxGame extends ApplicationAdapter {
 			    
 			    //contact enemey
 			    
-			    if ((fixtureA.getBody() == playerBody && fixtureB.getBody() == enemyLixoTeste.getBody())||
-			    	(fixtureB.getBody() == playerBody && fixtureA.getBody() == enemyLixoTeste.getBody())){
-			    	if (playerBody.getPosition().y > enemyLixoTeste.getBody().getPosition().y + enemyLixoTeste.getRadius()) {
+			    if ((fixtureA.getBody() == playerBody && fixtureB.getBody() == enemyLixo.getBody())||
+			    	(fixtureB.getBody() == playerBody && fixtureA.getBody() == enemyLixo.getBody())){
+			    	if (playerBody.getPosition().y > enemyLixo.getBody().getPosition().y + enemyLixo.getRadius()) {
 			    		System.out.println("Morreu");
 			    	}else {
 			    		System.out.println("te matou");
@@ -348,8 +352,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		//enemyLixo
 		
-		enemyLixoTeste.movimentacaoEnemy(27, 40);
-		TextureRegion currentEnemyFrame = enemyLixoAnimatioTeste.getKeyFrame(statetime, true);
+		enemyLixo.movimentacaoEnemy(27, 40, 1.5f, 1.5f);
+		enemyLixo2.movimentacaoEnemy(5.5f, 8, 1.7f, 1.7f);
+		
+		currentEnemyFrame = enemyLixo.Animatio(statetime, enemyLixoAnimatioRigth, enemyLixoAnimatioLeft);
+		currentEnemyFrame2 = enemyLixo2.Animatio(statetime, enemyLixoAnimatioRigth, enemyLixoAnimatioLeft);
 		
 		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
@@ -376,7 +383,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 		batch.draw(currentFrame, playerBody.getPosition().x -0.97f, playerBody.getPosition().y -1, 2, 2);
-		batch.draw(currentEnemyFrame, enemyLixoTeste.getBody().getPosition().x -0.46f, enemyLixoTeste.getBody().getPosition().y -0.5f, 1, 1);
+		batch.draw(currentEnemyFrame, enemyLixo.getBody().getPosition().x -0.46f, enemyLixo.getBody().getPosition().y -0.5f, 1, 1);
+		batch.draw(currentEnemyFrame2, enemyLixo2.getBody().getPosition().x -0.46f, enemyLixo2.getBody().getPosition().y -0.5f, 1, 1);
 		batch.end();
 		
         stage.act(Gdx.graphics.getDeltaTime());

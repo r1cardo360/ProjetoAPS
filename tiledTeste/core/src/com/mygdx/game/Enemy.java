@@ -134,17 +134,27 @@ public class Enemy {
 		
 	}
 	
-	public void movimentacaoEnemy(float posXLimiteEsquerda, float posXLimiteDireita) {
+	public void movimentacaoEnemy(float posXLimiteEsquerda, float posXLimiteDireita, float speedPosX, float speedNegX) {
 		if( enemyLixoBody.getPosition().x <= posXLimiteEsquerda) {
-			enemyLixoBody.setLinearVelocity(1.5f, 0);
+			enemyLixoBody.setLinearVelocity(speedPosX, 0);
 		}else if(enemyLixoBody.getPosition().x >= posXLimiteDireita) {
-			enemyLixoBody.setLinearVelocity(-1.5f, 0);
+			enemyLixoBody.setLinearVelocity(-speedNegX, 0);
 		}
 	}
 	
 	public TextureRegion quadroAtualDaAnimacao(float statetime, Animation<TextureRegion> enemyAnimation) {
 		TextureRegion currentEnemyFrame = enemyAnimation.getKeyFrame(statetime, true);
 		return currentEnemyFrame;
+	}
+	
+	public TextureRegion Animatio(float statetime, Animation<TextureRegion> left, Animation<TextureRegion> rigth) {
+		if (this.enemyLixoBody.getLinearVelocity().x > 0) {
+			TextureRegion currentEnemyFrame = left.getKeyFrame(statetime, true);
+			return currentEnemyFrame;
+		}else {
+			TextureRegion currentEnemyFrame = rigth.getKeyFrame(statetime, true);
+			return currentEnemyFrame;
+			}
 	}
 	
 }
