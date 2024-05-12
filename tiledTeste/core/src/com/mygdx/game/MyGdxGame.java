@@ -93,11 +93,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		
 		//Aplicando animação
-		gariStopRight = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_stop_right.png"));
-		gariStopLeft = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_stop_left.png"));
+		gariStopRight = new Texture(Gdx.files.internal("PlayerGari/Gari_stop_right.png"));
+		gariStopLeft = new Texture(Gdx.files.internal("PlayerGari/Gari_stop_left.png"));
 		batch = new SpriteBatch();
 		
-		walkrightSheet = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_walk_right.png"));
+		walkrightSheet = new Texture(Gdx.files.internal("PlayerGari/Gari_walk_right.png"));
 		TextureRegion[][] tmpright = TextureRegion.split(walkrightSheet, 32, 32);
 		walkrightFrames = new TextureRegion[2][2];
 		for(int i = 0; i<2; i++) {
@@ -108,7 +108,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		walkAnimationright = new Animation<TextureRegion>(0.25f, walkrightFrames[0]);
 		statetime = 0f;
 		
-		walkleftSheet = new Texture(Gdx.files.internal("Character/APS_Java_Sprite_teste/Gari_walk_left.png"));
+		walkleftSheet = new Texture(Gdx.files.internal("PlayerGari/Gari_walk_left.png"));
 		TextureRegion[][] tmpleft = TextureRegion.split(walkleftSheet, 32, 32);
 		walkleftFrames = new TextureRegion[1][3];
 		for(int i = 0; i<1; i++) {
