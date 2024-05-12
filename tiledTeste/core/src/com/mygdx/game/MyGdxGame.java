@@ -93,14 +93,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		
 		//Aplicando animação
-		gariStopRight = new Texture(Gdx.files.internal("PlayerGari/Gari_stop_right.png"));
-		gariStopLeft = new Texture(Gdx.files.internal("PlayerGari/Gari_stop_left.png"));
+		gariStopRight = new Texture(Gdx.files.internal("texture_pack/Gari/Sprite_format/Gari_default.png"));
+		gariStopLeft = new Texture(Gdx.files.internal("texture_pack/Gari/Sprite_format/Gari_default_left.png"));
 		batch = new SpriteBatch();
 		
-		walkrightSheet = new Texture(Gdx.files.internal("PlayerGari/Gari_walk_right.png"));
+		walkrightSheet = new Texture(Gdx.files.internal("texture_pack/Gari/Sprite_format/Gari_Walking_Right.png"));
 		TextureRegion[][] tmpright = TextureRegion.split(walkrightSheet, 32, 32);
-		walkrightFrames = new TextureRegion[2][2];
-		for(int i = 0; i<2; i++) {
+		walkrightFrames = new TextureRegion[1][2];
+		for(int i = 0; i<1; i++) {
 			for(int j = 0; j<2; j++) {
 				walkrightFrames[i][j] = tmpright[i][j];
 			}
@@ -108,11 +108,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		walkAnimationright = new Animation<TextureRegion>(0.25f, walkrightFrames[0]);
 		statetime = 0f;
 		
-		walkleftSheet = new Texture(Gdx.files.internal("PlayerGari/Gari_walk_left.png"));
+		walkleftSheet = new Texture(Gdx.files.internal("texture_pack/Gari/Sprite_format/Gari_Walking_Left.png"));
 		TextureRegion[][] tmpleft = TextureRegion.split(walkleftSheet, 32, 32);
-		walkleftFrames = new TextureRegion[1][3];
+		walkleftFrames = new TextureRegion[1][2];
 		for(int i = 0; i<1; i++) {
-			for (int j = 0; j<3; j++) {
+			for (int j = 0; j<2; j++) {
 				walkleftFrames[i][j] = tmpleft[i][j];
 			}
 		}
@@ -375,7 +375,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
-		batch.draw(currentFrame, playerBody.getPosition().x -0.8f, playerBody.getPosition().y -1, 2, 2);
+		batch.draw(currentFrame, playerBody.getPosition().x -0.97f, playerBody.getPosition().y -1, 2, 2);
 		batch.draw(currentEnemyFrame, enemyLixoTeste.getBody().getPosition().x -0.46f, enemyLixoTeste.getBody().getPosition().y -0.5f, 1, 1);
 		batch.end();
 		
