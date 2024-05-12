@@ -43,9 +43,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	private TiledMap map;
 	private OrthographicCamera cam;
 	private World mundo;
-	private Texture gariStopRight, gariStopLeft;
+	private Texture gariStopRight, gariStopLeft, enemyKillAnimation;
 	private SpriteBatch batch;
-	private boolean isJumping, isDead = false, enemy;
+	private boolean isJumping, isDead = false, enemyKill = false, enemyAnimatio = true;
 	
 	private Texture walkrightSheet, walkleftSheet;
 	private TextureRegion[][] walkrightFrames, walkleftFrames;
@@ -92,7 +92,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		enemyLixo.criarEnemy(mundo, 27, 4.5f, 1, 0.2f, 0.8f);
 		enemyLixoAnimatioLeft = enemyLixo.criarAnimacaoEnemy("texture_pack/Trash_bag/Sprite_format/Trash_bag_walking_left.png", 38, 34, 1, 13, 0.05f);
 		enemyLixoAnimatioRigth = enemyLixo.criarAnimacaoEnemy("texture_pack/Trash_bag/Sprite_format/Trash_bag_walking_right.png", 38, 34, 1, 13, 0.05f);
-		
+		enemyKillAnimation = new Texture(Gdx.files.internal("texture_pack/Trash_bag/Sprite_format/trash_dieng.png"));
+
 		enemyLixo2 = new Enemy();
 		enemyLixo2.criarEnemy(mundo, 5.5f, 21.5f, 1, 0.2f, 0.8f);
 		
@@ -241,7 +242,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			        (fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao"))) {
 			        // O jogador deixou de colidir com o chão
 			        isJumping = false;
-			        System.out.println("fim do contato");
 			    }
 				
 			}
@@ -255,18 +255,18 @@ public class MyGdxGame extends ApplicationAdapter {
 			    	fixtureB.getBody() == playerBody && fixtureA.getUserData() != null && fixtureA.getUserData().equals("chao")){
 			        // O jogador colidiu com o chão
 			        isJumping = true;
-			        System.out.println("Inicio do contato");
 			    }
 			    
 			    //contact enemey
 			    
-			    if ((fixtureA.getBody() == playerBody && fixtureB.getBody() == enemyLixo.getBody())||
-			    	(fixtureB.getBody() == playerBody && fixtureA.getBody() == enemyLixo.getBody())){
-			    	if (playerBody.getPosition().y > enemyLixo.getBody().getPosition().y + enemyLixo.getRadius()) {
-			    		System.out.println("Morreu");
-			    	}else {
-			    		System.out.println("te matou");
-			    	}
+			    if(!enemyKill) {
+				    if ((fixtureA.getBody() == playerBody && fixtureB.getBody() == enemyLixo.getBody())||
+				    	(fixtureB.getBody() == playerBody && fixtureA.getBody() == enemyLixo.getBody())){
+				    	if (playerBody.getPosition().y > enemyLixo.getBody().getPosition().y + enemyLixo.getRadius()) {
+				    		enemyKill = true;
+				    	}else {
+				    	}
+				    }
 			    }
 			}
 		});
@@ -306,6 +306,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		
 		renderer = new OrthogonalTiledMapRenderer(map, escala);
+	
 	}
 	
 	@Override
@@ -353,13 +354,20 @@ public class MyGdxGame extends ApplicationAdapter {
 		//enemyLixo
 		
 		enemyLixo.movimentacaoEnemy(27, 40, 1.5f, 1.5f);
-		enemyLixo2.movimentacaoEnemy(5.5f, 8, 1.7f, 1.7f);
-		
 		currentEnemyFrame = enemyLixo.Animatio(statetime, enemyLixoAnimatioRigth, enemyLixoAnimatioLeft);
+			
+		enemyLixo2.movimentacaoEnemy(5.5f, 8, 1.7f, 1.7f);
 		currentEnemyFrame2 = enemyLixo2.Animatio(statetime, enemyLixoAnimatioRigth, enemyLixoAnimatioLeft);
 		
 		
 		mundo.step(Gdx.graphics.getDeltaTime(), 6, 2);
+		
+	    if (enemyKill) {
+	        // Destrói o inimigo fora do ciclo de atualização principal do mundo
+	        enemyLixo.enemyKill(mundo);
+	        enemyKill = false; // Reinicia a flag
+	        enemyAnimatio = false;
+	    }
 		
 	    float minX = cam.viewportWidth / 2;
 	    float minY = cam.viewportHeight / 2;
@@ -383,13 +391,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 		batch.draw(currentFrame, playerBody.getPosition().x -0.97f, playerBody.getPosition().y -1, 2, 2);
-		batch.draw(currentEnemyFrame, enemyLixo.getBody().getPosition().x -0.46f, enemyLixo.getBody().getPosition().y -0.5f, 1, 1);
+		if(enemyAnimatio) {
+			batch.draw(currentEnemyFrame, enemyLixo.getBody().getPosition().x -0.46f, enemyLixo.getBody().getPosition().y -0.5f, 1, 1);
+		}
 		batch.draw(currentEnemyFrame2, enemyLixo2.getBody().getPosition().x -0.46f, enemyLixo2.getBody().getPosition().y -0.5f, 1, 1);
 		batch.end();
 		
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-		
 
 	}
 	

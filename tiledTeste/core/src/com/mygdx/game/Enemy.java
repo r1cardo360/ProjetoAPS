@@ -157,4 +157,8 @@ public class Enemy {
 			}
 	}
 	
+	public void enemyKill(World mundo) {
+		mundo.destroyBody(this.enemyLixoBody);
+	}
+	
 }
